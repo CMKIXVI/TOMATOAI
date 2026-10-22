@@ -15,6 +15,9 @@ vision = ["torch>=2.2", "opencv-python>=4.8"]
 robotics = []
 dev = ["pytest>=8.0", "jsonschema>=4.20"]
 
+[tool.setuptools.packages.find]
+include = ["tomatoai*"]
+
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
