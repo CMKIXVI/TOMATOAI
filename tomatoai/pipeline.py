@@ -39,6 +39,16 @@ class TomatoAIPipeline:
         )
         task.validate()
 
+        approved = bool(item.task.get("approved", not task.approval_required))
+        if task.approval_required and not approved:
+            verification = verify_task(
+                task.task_id,
+                False,
+                needs_review=True,
+                reason="task requires explicit approval before robot execution",
+            )
+            return {"task": task, "blocked": True, "verification": verification}
+
         observations = list(history or [])
         observations.append(Observation(timestamp=item.timestamp, perception=item.perception, environment=item.environment))
         state = self.estimator.update(observations)
@@ -70,7 +80,19 @@ class TomatoAIPipeline:
         )
         validate_command(command)
         self.robot.send(command)
-        return {"task": task, "state": tomato_state, "action": output, "command": command}
+        verification = verify_task(
+            task.task_id,
+            True,
+            evidence={"command_sent": True, "state_confidence": state.confidence},
+        )
+        return {
+            "task": task,
+            "blocked": False,
+            "state": tomato_state,
+            "action": output,
+            "command": command,
+            "verification": verification,
+        }
 
     @staticmethod
     def verify(task_id: str, success: bool, *, evidence: dict[str, Any] | None = None,
