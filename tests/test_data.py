@@ -26,5 +26,5 @@ def test_aerialyield_adapter():
 
 def test_registry_loads_repo_manifest():
     registry = DatasetRegistry(ROOT / "datasets/manifests/datasets.yaml")
-    assert registry.get("butom21").role == "perception"
-    assert registry.get("horti-m3-tomato").role == "agronomic"
+    assert any(dataset.dataset_id == "butom21" for dataset in registry.by_role("perception"))
+    assert any(dataset.dataset_id == "horti-m3-tomato" for dataset in registry.by_role("agronomic"))
