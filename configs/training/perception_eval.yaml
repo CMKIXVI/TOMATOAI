@@ -1,0 +1,11 @@
+schema_version: "0.1.0"
+metrics:
+  detection: [precision, recall, f1]
+  segmentation: [mean_iou]
+  ripeness: [accuracy]
+
+protocol:
+  grouped_by_plant: true
+  grouped_by_site: true
+  external_site_holdout: true
+  report_confusion_matrix: true
