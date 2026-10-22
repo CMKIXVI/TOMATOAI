@@ -1,0 +1,37 @@
+project:
+  name: TomatoAI
+  schema_version: "0.1.0"
+
+robot:
+  base_type: differential_drive
+  arm_dof_target: 6
+  world_frame: map
+  base_frame: base_link
+  require_estop: true
+  require_collision_checking: true
+  arm_operation_requires_base_stopped: true
+  max_linear_speed_m_s: 0.20
+  max_angular_speed_rad_s: 0.35
+
+sensors:
+  rgbd_camera:
+    enabled: true
+    frame: camera_color_optical_frame
+  environment:
+    temperature: true
+    relative_humidity: true
+    substrate_moisture: optional
+    co2: optional
+
+models:
+  perception:
+    model_id: null
+    revision: null
+  vla:
+    model_id: null
+    revision: null
+    adapter: null
+
+runtime:
+  allow_unattended_actuation: false
+  require_human_approval_for_manipulation: true
