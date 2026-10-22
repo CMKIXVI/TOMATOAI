@@ -1,0 +1,28 @@
+schema_version: "0.1.0"
+
+# Split by plant/session/time where possible. Never randomly split adjacent video frames.
+benchmarks:
+  perception_v1:
+    train: source_defined_or_grouped_70
+    validation: grouped_15
+    test: locked_grouped_15
+    grouping: [plant_id, capture_session]
+
+  temporal_state_v1:
+    train: first_time_periods
+    validation: middle_time_periods
+    test: later_time_periods
+    grouping: [plant_id, growing_cycle]
+
+  robot_policy_v1:
+    train: demonstrations_train
+    validation: demonstrations_validation
+    test: demonstrations_test
+    grouping: [demonstration_id, scene]
+
+rules:
+  - Keep the locked test set immutable after benchmark publication.
+  - Do not allow frames from the same continuous sequence in both train and test.
+  - Preserve source-dataset splits when they are scientifically justified.
+  - Report performance separately for greenhouse, field, cultivar, lighting and growth stage when sample size permits.
+  - Record every derived split in a machine-readable manifest.
