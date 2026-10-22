@@ -1,0 +1,64 @@
+schema_version: "0.1.0"
+project: TomatoAI
+
+policy:
+  raw_data_in_git: false
+  require_license_review: true
+  require_source_citation: true
+  require_checksum_when_available: true
+  require_split_manifest: true
+
+sources:
+  - id: horti-m3-tomato
+    name: Horti-M3-Tomato
+    source_url: https://doi.org/10.5281/zenodo.17217565
+    role: [growth, environment, phenotype, yield]
+    modalities: [rgb, environmental_sensors, manual_traits, yield]
+    seasons: [2023, 2024, 2025]
+    license_note: "Open-access research dataset; verify the current repository terms before redistribution or commercial use."
+
+  - id: aghc4-dwarf-tomato
+    name: "4th Autonomous Greenhouse Challenge: Dwarf Tomato Timeseries and Images"
+    source_url: https://doi.org/10.4121/fa102772-32db-4b30-bace-12f2016722ce
+    role: [greenhouse_monitoring, growth, yield, environment]
+    modalities: [rgbd, climate_timeseries, weather, plant_measurements]
+    license_note: "Check the dataset record for current access and reuse terms."
+
+  - id: aghc2-tomato
+    name: "Autonomous Greenhouse Challenge, Second Edition (2019)"
+    source_url: https://research.wur.nl/en/datasets/autonomous-greenhouse-challenge-second-edition-2019/
+    role: [greenhouse_control, irrigation, climate, harvest, quality]
+    modalities: [climate_timeseries, irrigation, actuator_state, harvest, crop_parameters]
+    license_note: "Check the WUR dataset record for current access and reuse terms."
+
+  - id: butom21
+    name: BUTom21
+    source_url: https://doi.org/10.60507/FK2/DHTEH1
+    role: [detection, segmentation, depth_localization]
+    modalities: [rgb, depth, pixel_annotations]
+    license_note: "Check the dataset record for current license and access conditions."
+
+  - id: tomatowur
+    name: TomatoWUR
+    source_url: https://doi.org/10.4121/e2c59841-4653-45de-a75e-4994b2766a2f
+    role: [3d_segmentation, skeletonisation, phenotyping]
+    modalities: [3d, annotated_plants]
+    license_note: "Check the WUR dataset record for current access and reuse terms."
+
+  - id: dino-cdp-tomato
+    name: "DINO+CDP Tomato Harvesting Dataset"
+    source_url: https://doi.org/10.17632/4spdh5jszm.2
+    role: [robot_imitation, pruning, harvesting, manipulation]
+    modalities: [multi_view_rgb, robot_joint_states, hdf5]
+    demonstrations: 100
+    frequency_hz: 20
+    robot: "dual MyCobot M5-280 leader-follower setup"
+    license: "CC BY 4.0"
+
+  - id: aerialyield-t2m
+    name: AerialYield-T2M
+    source_url: https://zenodo.org/records/22071809
+    role: [ripeness, segmentation, fruit_counting]
+    modalities: [rgb, masks, polygons, bounding_boxes, fruit_counts]
+    ripeness_stages: 6
+    license_note: "Verify the Zenodo record for the current license and permitted uses."
