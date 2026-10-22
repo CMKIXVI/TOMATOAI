@@ -4,6 +4,14 @@ from pathlib import Path
 from .manifest import DatasetManifest, load_manifest
 
 
+ROLE_GROUPS = {
+    "perception": {"detection", "segmentation", "depth_localization", "3d_segmentation", "ripeness", "fruit_counting", "skeletonisation", "phenotyping"},
+    "temporal": {"growth", "environment", "greenhouse_monitoring", "climate", "greenhouse_control"},
+    "robotics": {"robot_imitation", "pruning", "harvesting", "manipulation"},
+    "agronomic": {"growth", "environment", "phenotype", "yield", "greenhouse_monitoring", "greenhouse_control", "irrigation", "climate", "harvest", "quality"},
+}
+
+
 class DatasetRegistry:
     def __init__(self, manifest_path: str | Path):
         self.datasets = load_manifest(manifest_path)
@@ -15,7 +23,9 @@ class DatasetRegistry:
         raise KeyError(dataset_id)
 
     def by_role(self, role: str) -> list[DatasetManifest]:
-        return [dataset for dataset in self.datasets if dataset.role == role]
+        if role in ROLE_GROUPS:
+            return [dataset for dataset in self.datasets if set(dataset.roles) & ROLE_GROUPS[role]]
+        return [dataset for dataset in self.datasets if role in dataset.roles]
 
     def by_modality(self, modality: str) -> list[DatasetManifest]:
         return [dataset for dataset in self.datasets if modality in dataset.modalities]
