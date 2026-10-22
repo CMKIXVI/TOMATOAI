@@ -1,0 +1,32 @@
+schema_version: "0.1.0"
+task: tomato_vla_adaptation
+
+base_model:
+  provider: external_open_vla
+  model_id: replace_with_selected_open_model
+  freeze_base: true
+
+inputs:
+  rgb: true
+  depth: true
+  robot_state: true
+  tomato_state: true
+  task_context: true
+
+training:
+  method: parameter_efficient_adapter
+  demonstrations_source: dino-cdp-tomato
+  require_action_alignment: true
+  require_provenance: true
+  seed: 42
+
+safety:
+  action_filter_before_execution: true
+  confidence_gate: true
+  deterministic_robot_limits: true
+  human_approval_for_new_manipulation: true
+
+validation:
+  simulation_first: true
+  real_robot_required_before_release: true
+  unseen_plant_groups: true
