@@ -1,0 +1,30 @@
+schema_version: "0.1.0"
+name: tomato_perception_v0
+purpose: "Tomato fruit/plant detection, segmentation, and ripeness perception"
+
+input:
+  modalities: [rgb]
+  optional_modalities: [depth]
+  image_size: [640, 640]
+
+outputs:
+  required: [tomato_instances]
+  optional: [masks, ripeness_stage, confidence, depth_estimate]
+
+classes:
+  ripeness_stage: [green, breakers, turning, pink, light_red, red]
+
+training:
+  pretrained_backbone: true
+  freeze_backbone_initially: true
+  leakage_safe_splits: true
+  seed: 42
+  mixed_precision: true
+
+validation:
+  require_detection: true
+  require_segmentation: true
+  require_ripeness: true
+  report_per_dataset: true
+  report_by_lighting: true
+  report_by_camera: true
