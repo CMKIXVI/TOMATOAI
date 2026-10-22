@@ -1,0 +1,30 @@
+schema_version: "0.1.0"
+task: temporal_plant_state
+
+inputs:
+  image_sequence: true
+  environmental_timeseries: true
+  minimum_history_steps: 8
+
+outputs:
+  growth_stage: true
+  fruit_count: true
+  ripeness_distribution: true
+  stress_indicators: true
+  confidence: true
+
+data:
+  canonical_format: jsonl
+  group_key: plant_id
+  split_policy: datasets/manifests/splits.yaml
+
+training:
+  backbone: pretrained_multimodal_encoder
+  freeze_backbone_initially: true
+  adapter_only_first: true
+  seed: 42
+
+validation:
+  require_temporal_holdout: true
+  reject_cross_split_groups: true
+  report_per_stage_metrics: true
