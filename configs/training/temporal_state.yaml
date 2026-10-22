@@ -1,0 +1,17 @@
+schema_version: "0.1.0"
+state:
+  window_size: 16
+  stride: 4
+  tracked_signals:
+    - plant_height
+    - fruit_count
+    - ripe_fruit_count
+    - canopy_area
+    - stress_score
+    - environmental_temperature
+    - soil_moisture
+
+training:
+  objective: temporal_regression_and_classification
+  require_grouped_split: true
+  prevent_future_observation_leakage: true
