@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+*.log
+runs/
+outputs/
+checkpoints/
+weights/
+datasets/raw/
+datasets/processed/
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+.DS_Store
