@@ -1,0 +1,31 @@
+schema_version: "0.1.0"
+task: disease_stress_candidate_detection
+
+principles:
+  output_is_candidate_not_diagnosis: true
+  require_uncertainty: true
+  require_context: true
+
+inputs:
+  rgb: true
+  depth_optional: true
+  plant_state_optional: true
+  environment_optional: true
+
+outputs:
+  disease_candidates: true
+  pest_candidates: true
+  nutrient_stress_candidates: true
+  abiotic_stress_candidates: true
+  confidence: true
+
+training:
+  backbone: pretrained_vision_encoder
+  freeze_backbone_initially: true
+  augmentation: [lighting, blur, occlusion, viewpoint]
+  split_by_plant_or_session: true
+
+validation:
+  report_per_class_precision_recall: true
+  report_false_positive_rate: true
+  human_review_required: true
