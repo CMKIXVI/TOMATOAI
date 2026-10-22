@@ -24,11 +24,22 @@ def validate_command(command: RobotCommand) -> None:
     if command.arm_extended and any(abs(value) > 0.0 for value in command.base_velocity):
         raise ValueError("base motion is forbidden while arm is extended")
 
-    if command.gripper is not None and not 0.0 <= command.gripper <= 1.0:
+    if command.gripper is not None and (
+        isinstance(command.gripper, bool) or not 0.0 <= command.gripper <= 1.0
+    ):
         raise ValueError("gripper must be in [0, 1]")
 
-    if any(not isinstance(value, (int, float)) for value in command.joint_positions):
+    if any(
+        isinstance(value, bool) or not isinstance(value, (int, float))
+        for value in command.joint_positions
+    ):
         raise ValueError("joint positions must be numeric")
+
+    if any(
+        isinstance(value, bool) or not isinstance(value, (int, float))
+        for value in command.base_velocity
+    ):
+        raise ValueError("base velocity must be numeric")
 
 
 class DryRunRobotBridge:
