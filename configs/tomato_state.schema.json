@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TomatoAI Plant State",
+  "type": "object",
+  "required": ["schema_version", "plant_id", "observed_at", "observations", "uncertainty_flags"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "plant_id": {"type": ["string", "null"]},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "location": {
+      "type": ["object", "null"],
+      "properties": {
+        "row_id": {"type": ["string", "null"]},
+        "zone_id": {"type": ["string", "null"]},
+        "pose": {"type": ["object", "null"]}
+      }
+    },
+    "observations": {
+      "type": "object",
+      "properties": {
+        "growth_stage": {"type": ["object", "null"]},
+        "fruit_count": {"type": ["integer", "null"], "minimum": 0},
+        "ripeness_distribution": {
+          "type": ["object", "null"],
+          "properties": {
+            "green": {"type": ["integer", "null"], "minimum": 0},
+            "turning": {"type": ["integer", "null"], "minimum": 0},
+            "ripe": {"type": ["integer", "null"], "minimum": 0}
+          }
+        },
+        "health_flags": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["label", "requires_review"],
+            "properties": {
+              "label": {"type": "string"},
+              "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+              "evidence_id": {"type": ["string", "null"]},
+              "requires_review": {"type": "boolean"}
+            }
+          }
+        }
+      }
+    },
+    "environment": {
+      "type": ["object", "null"],
+      "properties": {
+        "air_temperature_c": {"type": ["number", "null"]},
+        "relative_humidity_pct": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
+        "co2_ppm": {"type": ["number", "null"], "minimum": 0},
+        "light_par_umol_m2_s": {"type": ["number", "null"], "minimum": 0},
+        "substrate_moisture_pct": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
+        "ec_ms_cm": {"type": ["number", "null"], "minimum": 0},
+        "ph": {"type": ["number", "null"], "minimum": 0, "maximum": 14}
+      }
+    },
+    "predictions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target", "model_version"],
+        "properties": {
+          "target": {"type": "string"},
+          "value": {},
+          "interval": {},
+          "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+          "model_version": {"type": "string"}
+        }
+      }
+    },
+    "uncertainty_flags": {"type": "array", "items": {"type": "string"}},
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "sensor_ids": {"type": "array", "items": {"type": "string"}},
+        "model_ids": {"type": "array", "items": {"type": "string"}},
+        "source_observation_ids": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  },
+  "additionalProperties": true
+}
