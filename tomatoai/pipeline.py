@@ -4,8 +4,10 @@ from typing import Any
 
 from tomatoai.robot_bridge import RobotBridge, RobotCommand, validate_command
 from tomatoai.safety import validate_confidence
-from tomatoai.temporal_state import Observation, TemporalState, TemporalStateEstimator, validate_state
+from tomatoai.task_planner import TaskRequest
+from tomatoai.temporal_state import Observation, TemporalStateEstimator, validate_state
 from tomatoai.vla_adapter import VLAAdapter
+from tomatoai.verification import VerificationRecord, verify_task
 
 
 @dataclass(frozen=True)
@@ -20,27 +22,25 @@ class PipelineInput:
 
 
 class TomatoAIPipeline:
-    """Orchestrate state estimation, VLA inference, safety, and execution."""
+    """Orchestrate task validation, state estimation, VLA inference and execution."""
 
-    def __init__(
-        self,
-        estimator: TemporalStateEstimator,
-        vla: VLAAdapter,
-        robot: RobotBridge,
-    ) -> None:
+    def __init__(self, estimator: TemporalStateEstimator, vla: VLAAdapter, robot: RobotBridge) -> None:
         self.estimator = estimator
         self.vla = vla
         self.robot = robot
 
     def run(self, item: PipelineInput, history: list[Observation] | None = None) -> dict[str, Any]:
-        observations = list(history or [])
-        observations.append(
-            Observation(
-                timestamp=item.timestamp,
-                perception=item.perception,
-                environment=item.environment,
-            )
+        task = TaskRequest(
+            task_id=str(item.task.get("task_id", "")),
+            task_type=str(item.task.get("task_type", "")),
+            target=dict(item.task.get("target", {})),
+            approval_required=bool(item.task.get("approval_required", True)),
+            constraints=dict(item.task.get("constraints", {})),
         )
+        task.validate()
+
+        observations = list(history or [])
+        observations.append(Observation(timestamp=item.timestamp, perception=item.perception, environment=item.environment))
         state = self.estimator.update(observations)
         validate_state(state)
         if not validate_confidence(state.confidence):
@@ -59,7 +59,7 @@ class TomatoAIPipeline:
             depth=item.depth,
             robot_state=item.robot_state,
             tomato_state=tomato_state,
-            task=item.task,
+            task={**item.task, "task_id": task.task_id, "task_type": task.task_type},
         )
         output = self.vla.decode_action(self.vla.propose_action(observation))
         command = RobotCommand(
@@ -70,4 +70,10 @@ class TomatoAIPipeline:
         )
         validate_command(command)
         self.robot.send(command)
-        return {"state": tomato_state, "action": output, "command": command}
+        return {"task": task, "state": tomato_state, "action": output, "command": command}
+
+    @staticmethod
+    def verify(task_id: str, success: bool, *, evidence: dict[str, Any] | None = None,
+               needs_review: bool = False, reason: str | None = None) -> VerificationRecord:
+        """Record observed task outcome separately from command execution."""
+        return verify_task(task_id, success, evidence=evidence, needs_review=needs_review, reason=reason)
