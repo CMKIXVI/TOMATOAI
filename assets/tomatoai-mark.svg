@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">TomatoAI</title>
+  <desc id="desc">A geometric tomato with a five-point green calyx and an abstract robotic vision aperture.</desc>
+  <defs>
+    <linearGradient id="tomato" x1="110" y1="90" x2="402" y2="418" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF624F"/><stop offset="1" stop-color="#C91F32"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="202" y1="55" x2="316" y2="150" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#B7F36B"/><stop offset="1" stop-color="#34854C"/>
+    </linearGradient>
+  </defs>
+  <path d="M255 125 C203 81 144 98 113 145 C75 202 90 293 127 356 C158 409 202 430 256 423 C310 430 354 409 385 356 C422 293 437 202 399 145 C368 98 309 81 257 125Z" fill="url(#tomato)"/>
+  <path d="M254 130 C230 96 202 85 176 92 C195 121 218 140 254 145Z" fill="url(#leaf)"/>
+  <path d="M257 130 C274 82 316 60 353 71 C329 108 301 131 257 145Z" fill="url(#leaf)"/>
+  <path d="M254 132 C234 72 246 42 263 28 C282 61 281 95 263 143Z" fill="#67B957"/>
+  <path d="M250 138 C214 126 181 134 160 157 C200 163 226 157 250 145Z" fill="#4FA653"/>
+  <path d="M264 139 C301 123 337 134 359 157 C319 164 291 157 264 145Z" fill="#277849"/>
+  <path d="M257 143 L257 174" stroke="#277849" stroke-width="13" stroke-linecap="round"/>
+  <path d="M168 233 C191 197 226 181 256 181 C286 181 321 197 344 233 C321 269 286 285 256 285 C226 285 191 269 168 233Z" fill="#FFF8EB"/>
+  <path d="M190 233 C208 211 232 201 256 201 C280 201 304 211 322 233 C304 255 280 265 256 265 C232 265 208 255 190 233Z" fill="#173A30"/>
+  <circle cx="256" cy="233" r="25" fill="#53C97A"/><circle cx="256" cy="233" r="12" fill="#173A30"/><circle cx="247" cy="224" r="5" fill="#FFFFFF"/>
+  <path d="M102 273 C111 299 123 319 139 337" fill="none" stroke="#FF9B88" stroke-width="12" stroke-linecap="round" opacity=".65"/>
+  <path d="M333 344 h20 v20 h-20z M353 364 h20 v20 h-20z" fill="#FFE9BF"/>
+</svg>
