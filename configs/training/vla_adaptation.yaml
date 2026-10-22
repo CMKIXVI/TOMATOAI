@@ -1,0 +1,23 @@
+schema_version: "0.1.0"
+model:
+  provider: open_vla
+  freeze_backbone: true
+  trainable_component: adapter
+  action_space: joint_positions_plus_gripper
+
+data:
+  source: dino-cdp-tomato
+  canonical_format: jsonl
+  split_manifest: datasets/manifests/splits.yaml
+  require_provenance: true
+
+training:
+  objective: supervised_imitation
+  batch_size: 8
+  epochs: 10
+  learning_rate: 0.0001
+  mixed_precision: true
+
+validation:
+  held_out_episode: true
+  require_safety_gate: true
