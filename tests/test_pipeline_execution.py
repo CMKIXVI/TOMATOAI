@@ -43,7 +43,11 @@ def test_pipeline_connects_task_state_vla_and_robot():
             robot_state={},
             perception={"fruit_count": 3},
             environment={"air_temperature_c": 24.0},
-            task={"task_id": "t-1", "task_type": "inspect"},
+            task={
+                "task_id": "t-1",
+                "task_type": "inspect",
+                "approval_required": False,
+            },
             timestamp="2026-10-22T08:00:00Z",
         )
     )
