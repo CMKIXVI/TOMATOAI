@@ -6,18 +6,13 @@ predictions, while this layer turns them into the canonical PlantState contract.
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any, Iterable
+from typing import Any
 
 from tomatoai.perception_baseline import Prediction
 from tomatoai.plant_state import Confidence, FruitState, PlantState
 
 RIPENESS_LABELS = {"green", "turning", "ripe"}
 GROWTH_STAGES = {"seedling", "vegetative", "flowering", "fruiting", "mature"}
-
-
-def _confidence(values: Iterable[float]) -> float | None:
-    values = list(values)
-    return min(values) if values else None
 
 
 def predictions_to_plant_state(
@@ -30,9 +25,8 @@ def predictions_to_plant_state(
 ) -> PlantState:
     """Convert validated perception predictions into a deterministic PlantState."""
     fruit_counts = {label: 0 for label in RIPENESS_LABELS}
-    fruit_confidences: list[float] = []
     growth_stage: str | None = None
-    growth_confidences: list[float] = []
+    growth_confidence: float | None = None
     health_flags: list[dict[str, Any]] = []
     uncertainty: list[str] = []
 
@@ -44,13 +38,16 @@ def predictions_to_plant_state(
             raise ValueError("prediction label must not be empty")
         if label in RIPENESS_LABELS:
             fruit_counts[label] += 1
-            fruit_confidences.append(prediction.confidence)
         elif label in GROWTH_STAGES:
-            if growth_stage is None or prediction.confidence > (growth_confidences[-1] if growth_confidences else -1.0):
+            if growth_stage is None or prediction.confidence > (
+                growth_confidence if growth_confidence is not None else -1.0
+            ):
                 growth_stage = label
-            growth_confidences.append(prediction.confidence)
+                growth_confidence = prediction.confidence
         elif label.startswith("health:"):
-            health_flags.append({"label": label.split(":", 1)[1], "confidence": prediction.confidence})
+            health_flags.append(
+                {"label": label.split(":", 1)[1], "confidence": prediction.confidence}
+            )
         else:
             uncertainty.append(f"unmapped:{label}")
 
@@ -59,7 +56,7 @@ def predictions_to_plant_state(
         plant_id=plant_id,
         observed_at=observed_at,
         growth_stage=growth_stage,
-        growth_confidence=Confidence(_confidence(growth_confidences)),
+        growth_confidence=Confidence(growth_confidence),
         fruit=FruitState(
             visible_count=fruit_total,
             green_count=fruit_counts["green"],
